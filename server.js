@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 
 const authRoutes = require('./routes/auth');
 const itineraryRoutes = require('./routes/itinerary');
+const tripsRoutes = require('./routes/trips');
 const crowdRoutes = require('./routes/crowd');
 const weatherRoutes = require('./routes/weather');
 
@@ -17,6 +18,7 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/trips', tripsRoutes);
 app.use('/', itineraryRoutes);
 app.use('/', crowdRoutes);
 app.use('/', weatherRoutes);

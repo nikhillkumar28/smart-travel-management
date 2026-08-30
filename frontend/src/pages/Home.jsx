@@ -1,5 +1,7 @@
 ﻿import { useState } from 'react';
 import { fetchWeather, generateItinerary, predictCrowd } from '../services/api.js';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import ItineraryCard from '../components/ItineraryCard.jsx';
 import WeatherCard from '../components/WeatherCard.jsx';
 import CrowdCard from '../components/CrowdCard.jsx';
@@ -12,6 +14,7 @@ function getLocalDateTime() {
 }
 
 export default function Home() {
+  const { isAuthenticated, token } = useAuth();
   const [destination, setDestination] = useState('');
   const [days, setDays] = useState(3);
   const [budget, setBudget] = useState(15000);
@@ -24,11 +27,17 @@ export default function Home() {
   const [crowd, setCrowd] = useState(null);
   const [crowdStatus, setCrowdStatus] = useState('idle');
   const [crowdError, setCrowdError] = useState('');
+  const [formError, setFormError] = useState('');
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (!isAuthenticated || !token) {
+      setFormError('Please log in to generate and save a trip.');
+      return;
+    }
     try {
       setIsSubmitting(true);
+      setFormError('');
       setWeatherStatus('loading');
       setWeatherError('');
       setCrowdStatus('loading');
@@ -43,7 +52,7 @@ export default function Home() {
           days,
           budget,
           interests
-        }),
+        }, token),
         predictCrowd({ location: destination, date, time })
       ]);
 
@@ -124,6 +133,12 @@ export default function Home() {
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-300/60 focus:ring-2 focus:ring-amber-300/30"
             />
           </div>
+
+          {formError && (
+            <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
+              {formError} {!isAuthenticated && <Link to="/login" className="font-semibold underline">Log in</Link>}
+            </p>
+          )}
 
           <button
             type="submit"

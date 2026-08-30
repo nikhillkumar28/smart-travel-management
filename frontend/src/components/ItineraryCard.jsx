@@ -29,6 +29,18 @@
           </p>
           <p className="mt-1 text-slate-100">{day.activities?.evening || '—'}</p>
         </div>
+        {day.estimatedCost && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Estimated cost</p>
+            <p className="mt-1 text-slate-100">{day.estimatedCost}</p>
+          </div>
+        )}
+        {day.reason && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Why this plan</p>
+            <p className="mt-1 text-slate-100">{day.reason}</p>
+          </div>
+        )}
       </div>
     </article>
   );
