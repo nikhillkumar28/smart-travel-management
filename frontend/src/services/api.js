@@ -52,3 +52,17 @@ export async function predictCrowd(payload) {
   if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to predict crowd level'));
   return response.json();
 }
+
+export async function fetchPlaces(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, val]) => {
+    if (val !== undefined && val !== null && val !== '') {
+      query.append(key, val);
+    }
+  });
+  const qs = query.toString();
+  const url = qs ? `/api/places?${qs}` : '/api/places';
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to fetch places'));
+  return response.json();
+}

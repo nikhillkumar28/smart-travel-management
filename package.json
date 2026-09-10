@@ -1,11 +1,13 @@
-﻿{
+{
   "name": "express-auth-backend",
   "version": "1.0.0",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "seed": "node scripts/seedPlaces.js",
+    "explain": "node scripts/explainPlacesQuery.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

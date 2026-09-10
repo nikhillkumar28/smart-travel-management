@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -7,6 +7,8 @@ const itineraryRoutes = require('./routes/itinerary');
 const tripsRoutes = require('./routes/trips');
 const crowdRoutes = require('./routes/crowd');
 const weatherRoutes = require('./routes/weather');
+const placesRoutes = require('./routes/places');
+const { seedPlacesIfEmpty } = require('./scripts/seedPlaces');
 
 dotenv.config();
 
@@ -22,6 +24,7 @@ app.use('/api/trips', tripsRoutes);
 app.use('/', itineraryRoutes);
 app.use('/', crowdRoutes);
 app.use('/', weatherRoutes);
+app.use('/', placesRoutes);
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -33,8 +36,13 @@ if (!MONGO_URI) {
 
 mongoose
   .connect(MONGO_URI)
-  .then(() => {
+  .then(async () => {
     console.log('Connected to MongoDB');
+    try {
+      await seedPlacesIfEmpty();
+    } catch (seedErr) {
+      console.warn('Place seed check notice:', seedErr.message);
+    }
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
