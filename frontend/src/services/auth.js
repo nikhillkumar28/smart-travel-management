@@ -1,3 +1,5 @@
+import { getApiUrl } from './api.js';
+
 async function getErrorMessage(response, fallback) {
   const contentType = response.headers.get('content-type') || '';
   if (contentType.includes('application/json')) {
@@ -8,7 +10,7 @@ async function getErrorMessage(response, fallback) {
 }
 
 async function request(path, options = {}) {
-  const response = await fetch(path, {
+  const response = await fetch(getApiUrl(path), {
     headers: { 'Content-Type': 'application/json', ...options.headers },
     ...options
   });

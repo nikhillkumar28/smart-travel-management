@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { fetchPlaces } from '../services/api.js';
+import { fetchPlaces, getApiUrl } from '../services/api.js';
 
 const CITIES = ['Jaipur', 'Goa', 'Delhi', 'Mumbai', 'Udaipur', 'Manali'];
 
@@ -138,7 +138,7 @@ export default function DestinationsPage() {
 
         const targetLocation = selected.city || selected.name;
         const response = await fetch(
-          `/api/weather?${new URLSearchParams({ destination: targetLocation })}`,
+          getApiUrl(`/api/weather?${new URLSearchParams({ destination: targetLocation })}`),
           { signal: controller.signal }
         );
 

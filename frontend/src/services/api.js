@@ -1,3 +1,10 @@
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+
+export function getApiUrl(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${API_BASE_URL}${normalizedPath}`;
+}
+
 async function getErrorMessage(response, fallback) {
   const contentType = response.headers.get('content-type') || '';
   if (contentType.includes('application/json')) {
@@ -8,7 +15,7 @@ async function getErrorMessage(response, fallback) {
 }
 
 export async function generateItinerary(data, token) {
-  const response = await fetch('/api/itinerary/generate', {
+  const response = await fetch(getApiUrl('/api/itinerary/generate'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify(data)
@@ -18,19 +25,19 @@ export async function generateItinerary(data, token) {
 }
 
 export async function fetchTrips(token) {
-  const response = await fetch('/api/trips', { headers: { Authorization: `Bearer ${token}` } });
+  const response = await fetch(getApiUrl('/api/trips'), { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to load trips'));
   return response.json();
 }
 
 export async function fetchTrip(id, token) {
-  const response = await fetch(`/api/trips/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+  const response = await fetch(getApiUrl(`/api/trips/${id}`), { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to load trip'));
   return response.json();
 }
 
 export async function deleteTrip(id, token) {
-  const response = await fetch(`/api/trips/${id}`, {
+  const response = await fetch(getApiUrl(`/api/trips/${id}`), {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -38,13 +45,13 @@ export async function deleteTrip(id, token) {
 }
 
 export async function fetchWeather(city) {
-  const response = await fetch(`/api/weather/${encodeURIComponent(city)}`);
+  const response = await fetch(getApiUrl(`/api/weather/${encodeURIComponent(city)}`));
   if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to fetch weather'));
   return response.json();
 }
 
 export async function predictCrowd(payload) {
-  const response = await fetch('/api/crowd/predict', {
+  const response = await fetch(getApiUrl('/api/crowd/predict'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -61,8 +68,8 @@ export async function fetchPlaces(params = {}) {
     }
   });
   const qs = query.toString();
-  const url = qs ? `/api/places?${qs}` : '/api/places';
-  const response = await fetch(url);
+  const path = qs ? `/api/places?${qs}` : '/api/places';
+  const response = await fetch(getApiUrl(path));
   if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to fetch places'));
   return response.json();
 }
