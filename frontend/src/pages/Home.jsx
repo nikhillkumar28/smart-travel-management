@@ -83,7 +83,7 @@ export default function Home() {
 
       <div className="w-full max-w-xl rounded-2xl border border-white/10 bg-white/10 p-8 shadow-lg backdrop-blur">
         <h1 className="text-3xl font-semibold tracking-tight text-white">
-          Plan Your Smart Trip ✈️
+          Plan Your Trip 
         </h1>
         <p className="mt-2 text-sm text-slate-300">
           Share your destination and trip length to get a tailored plan.
@@ -96,7 +96,7 @@ export default function Home() {
               type="text"
               value={destination}
               onChange={(event) => setDestination(event.target.value)}
-              placeholder="e.g., Goa"
+              placeholder="e.g., Jagannath Puri"
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-300/60 focus:ring-2 focus:ring-amber-300/30"
             />
           </div>
@@ -129,7 +129,7 @@ export default function Home() {
               type="text"
               value={interests}
               onChange={(event) => setInterests(event.target.value)}
-              placeholder="e.g., beaches, food, adventure"
+              placeholder="e.g., Temples,Food"
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-amber-300/60 focus:ring-2 focus:ring-amber-300/30"
             />
           </div>
