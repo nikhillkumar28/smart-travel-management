@@ -19,7 +19,6 @@ A full-stack, AI-powered travel planning web application that generates personal
 - [Continuous Integration (CI)](#continuous-integration-ci)
 - [Local Setup](#local-setup)
 - [Environment Variables](#environment-variables)
-- [Future Improvements](#future-improvements)
 
 ---
 
@@ -122,8 +121,8 @@ User Input (Destination, Days, Budget, Interests)
 ```
 
 ### Why Prompt Chaining Instead of a Single Prompt?
-1. **Reduced Cognitive Load & Hallucination:** Asking a model to simultaneously analyze constraints, pick realistic attractions, stay within budget, and assemble a multi-day schedule in one shot frequently leads to rushed schedules, budget violations, or invented locations. Stage 1 grounds the constraints before any activities are selected.
-2. **Guaranteed Schema Adherence:** Large, monolithic JSON outputs often run into token exhaustion or format degradation. Breaking the synthesis into discrete stages with smaller, explicit JSON schemas guarantees valid JSON structure at every step.
+1. **Separates itinerary generation into smaller, easier-to-validate steps:** Asking a model to simultaneously analyze constraints, pick realistic attractions, stay within budget, and assemble a multi-day schedule in one shot frequently leads to rushed schedules, budget violations, or invented locations. Stage 1 grounds the constraints before any activities are selected.
+2. **More consistent structured output:** Large, monolithic JSON outputs often run into token exhaustion or format degradation. Breaking the synthesis into discrete stages with smaller, explicit JSON schemas guarantees valid JSON structure at every step.
 3. **Early Validation & Error Isolation:** The pipeline inspects intermediate outputs (`isValidRequirementsAnalysis`, `isValidCandidates`). If a stage produces malformed data, it is rejected immediately before wasting downstream tokens.
 
 ---
@@ -374,8 +373,8 @@ The pipeline runs completely offline using mock API variables and the containeri
 
 ```bash
 # Clone the repository
-git clone <your-repo-url>
-cd Project2_PM
+git clone https://github.com/nikhillkumar28/smart-travel-management.git
+cd smart-travel-management
 
 # Install backend dependencies
 npm install
