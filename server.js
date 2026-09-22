@@ -16,7 +16,6 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 // Enable CORS for the Vercel frontend
-const cors = require('cors');
 const corsOptions = {
   origin: true, // reflect request origin
   credentials: true,
