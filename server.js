@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const dotenv = require('dotenv');
 
 const authRoutes = require('./routes/auth');
@@ -14,6 +15,14 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+// Enable CORS for the Vercel frontend
+const cors = require('cors');
+const corsOptions = {
+  origin: true, // reflect request origin
+  credentials: true,
+  allowHeaders:['Content-Type','Authorization'],
+};
+app.use(cors(corsOptions));
 
 app.get('/', (_req, res) => {
   res.json({ status: 'ok' });
