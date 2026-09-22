@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors');            // <-- import cors
 const dotenv = require('dotenv');
 
 const authRoutes = require('./routes/auth');
@@ -15,11 +15,15 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+
 // Enable CORS for the Vercel frontend
+// - origin: true → echo the request’s Origin header (works both locally and on Render)
+// - credentials: true → allows the Authorization header to be sent
+// - allowedHeaders: explicitly list the headers the browser will send
 const corsOptions = {
-  origin: true, // reflect request origin
+  origin: true,
   credentials: true,
-  allowHeaders:['Content-Type','Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 app.use(cors(corsOptions));
 
