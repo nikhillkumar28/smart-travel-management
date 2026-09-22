@@ -1,6 +1,6 @@
-# Smart Travel Planning and Decision Platform
+# Journo - Travel Planner
 
-A full-stack, AI-powered travel planning web application that generates personalized, multi-day itineraries based on user destination, duration, budget, and travel interests. The platform combines multi-stage LLM prompt chaining, live weather forecasting, rule-based crowd prediction, destination discovery with MongoDB compound indexing, user authentication, and persistent trip management.
+A full-stack, AI-powered travel planning and decision platform that generates personalized, multi-day itineraries based on user destination, duration, budget, and travel interests. The platform combines multi-stage LLM prompt chaining, live weather forecasting, rule-based crowd prediction, destination discovery with MongoDB compound indexing, user authentication, and persistent trip management.
 
 ---
 
@@ -72,7 +72,7 @@ The **Smart Travel Planning and Decision Platform** consolidates this entire wor
 - **CORS:** `cors` middleware with configurable allowed origins
 
 ### External APIs
-- **LLM / AI:** Google Gemini API (`gemini-3.6-flash` via HTTP JSON Schema endpoint)
+- **LLM / AI:** Google Gemini API (`gemini-2.5-flash` with automatic fallback to `gemini-2.0-flash` / `gemini-1.5-flash`, exponential backoff retry for transient 503/429 errors)
 - **Weather:** OpenWeather API (Direct Geocoding + Current Weather Data v2.5)
 
 ### Testing & DevOps
@@ -399,7 +399,7 @@ PORT=3000
 MONGO_URI=mongodb://localhost:27017/express_auth
 JWT_SECRET=your_super_secret_jwt_key
 GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-3.6-flash
+GEMINI_MODEL=gemini-2.5-flash
 OPENWEATHER_API_KEY=your_openweather_api_key
 CLIENT_URL=http://localhost:5173
 ```

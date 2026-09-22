@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { fetchWeather, generateItinerary, predictCrowd } from '../services/api.js';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -45,7 +45,7 @@ export default function Home() {
 
       const { date, time } = getLocalDateTime();
 
-      const [weatherData, itineraryData, crowdData] = await Promise.all([
+      const [weatherRes, itineraryRes, crowdRes] = await Promise.allSettled([
         fetchWeather(destination),
         generateItinerary({
           destination,
@@ -56,18 +56,45 @@ export default function Home() {
         predictCrowd({ location: destination, date, time })
       ]);
 
-      setWeather(weatherData);
-      setWeatherStatus('success');
-      setItinerary(itineraryData);
-      setCrowd(crowdData);
-      setCrowdStatus('success');
-      console.log('Itinerary response:', itineraryData);
+      if (itineraryRes.status === 'fulfilled') {
+        setItinerary(itineraryRes.value);
+      } else {
+        console.error('Itinerary error:', itineraryRes.reason);
+        const rawMsg = itineraryRes.reason?.message || '';
+        const isTechnicalError =
+          rawMsg.toLowerCase().includes('gemini') ||
+          rawMsg.toLowerCase().includes('status') ||
+          rawMsg.toLowerCase().includes('models/') ||
+          rawMsg.toLowerCase().includes('v1beta') ||
+          rawMsg.toLowerCase().includes('failed') ||
+          rawMsg.toLowerCase().includes('unreadable') ||
+          rawMsg.length > 80;
+
+        const friendlyMsg = isTechnicalError
+          ? 'Service unreachable. Please try again in a few moments.'
+          : (rawMsg || 'Service unreachable. Please try again in a few moments.');
+
+        setFormError(friendlyMsg);
+      }
+
+      if (weatherRes.status === 'fulfilled') {
+        setWeather(weatherRes.value);
+        setWeatherStatus('success');
+      } else {
+        setWeatherStatus('error');
+        setWeatherError('Unable to fetch weather at this time.');
+      }
+
+      if (crowdRes.status === 'fulfilled') {
+        setCrowd(crowdRes.value);
+        setCrowdStatus('success');
+      } else {
+        setCrowdStatus('error');
+        setCrowdError('Unable to predict crowd level at this time.');
+      }
     } catch (err) {
-      console.error('Itinerary error:', err);
-      setWeatherStatus('error');
-      setWeatherError(err.message || 'Unable to fetch weather.');
-      setCrowdStatus('error');
-      setCrowdError(err.message || 'Unable to predict crowd.');
+      console.error('Submission error:', err);
+      setFormError('Service unreachable. Please try again in a few moments.');
     } finally {
       setIsSubmitting(false);
     }

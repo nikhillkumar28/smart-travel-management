@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <nav className="w-full border-b border-white/10 bg-slate-950/80 text-white backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-        <span className="text-lg font-semibold tracking-wide">Journo..</span>
+        <span className="text-lg font-semibold tracking-wide">Journo - Travel Planner</span>
         <div className="flex items-center gap-3">
           <Link to="/" className={linkClass}>Home</Link>
           <Link to="/destinations" className={linkClass}>Destinations</Link>

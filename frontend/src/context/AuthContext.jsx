@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { getCurrentUser, loginUser, registerUser } from '../services/auth.js';
 
 const AuthContext = createContext(null);
-const TOKEN_KEY = 'ai_travel_token';
+const TOKEN_KEY = 'journo_travel_token';
+const LEGACY_TOKEN_KEY = 'ai_travel_token';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -10,18 +11,19 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
+    const savedToken = localStorage.getItem(TOKEN_KEY) || localStorage.getItem(LEGACY_TOKEN_KEY);
+    if (!savedToken) {
       setIsLoading(false);
       return;
     }
-    getCurrentUser(token)
+    getCurrentUser(savedToken)
       .then(({ user: currentUser }) => {
-        setToken(token);
+        setToken(savedToken);
         setUser(currentUser);
       })
       .catch(() => {
         localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(LEGACY_TOKEN_KEY);
         setToken(null);
       })
       .finally(() => setIsLoading(false));
@@ -44,6 +46,7 @@ export function AuthProvider({ children }) {
     register: (credentials) => authenticate(() => registerUser(credentials)),
     logout: () => {
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(LEGACY_TOKEN_KEY);
       setToken(null);
       setUser(null);
     }

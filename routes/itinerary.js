@@ -31,19 +31,24 @@ async function handleGenerate(req, res) {
 
     // This route checks again before persistence so no malformed model output is saved.
     if (!isValidItinerary(itinerary) || itinerary.totalDays !== input.days) {
-      return res.status(502).json({ message: 'Gemini returned an invalid itinerary structure' });
+      return res.status(502).json({ message: 'Service unreachable. Please try again in a few moments.' });
     }
 
     const trip = await Trip.create({ userId: req.user.id, ...input, itinerary });
     return res.status(201).json({ ...itinerary, tripId: trip._id });
   } catch (err) {
+    console.error('[Itinerary Generation Error]', err.message || err);
     if (err instanceof GeminiResponseError) {
-      return res.status(err.statusCode).json({ message: err.message });
+      return res.status(err.statusCode || 502).json({
+        message: 'Service unreachable. Please try again in a few moments.'
+      });
     }
     if (err.message === 'Missing GEMINI_API_KEY in environment') {
-      return res.status(500).json({ message: err.message });
+      return res.status(500).json({
+        message: 'Service unreachable. Please try again in a few moments.'
+      });
     }
-    return res.status(500).json({ message: 'Unable to generate and save itinerary' });
+    return res.status(500).json({ message: 'Service unreachable. Please try again in a few moments.' });
   }
 }
 

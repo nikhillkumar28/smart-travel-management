@@ -20,7 +20,7 @@ export async function generateItinerary(data, token) {
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify(data)
   });
-  if (!response.ok) throw new Error(await getErrorMessage(response, 'Failed to generate itinerary'));
+  if (!response.ok) throw new Error(await getErrorMessage(response, 'Service unreachable. Please try again in a few moments.'));
   return response.json();
 }
 
